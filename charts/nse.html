@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+  var dps1 = [], dps2= [];
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    theme: "light2",
+    exportEnabled: true,
+    title:{
+      text:"NSE - StockChart"
+    },
+    subtitles: [{
+      text: ""
+    }],
+    charts: [{
+      axisX: {
+        crosshair: {
+          enabled: true,
+          snapToDataPoint: true
+        }
+      },
+      axisY: {
+        prefix: ""
+      },
+      data: [{
+        type: "candlestick",
+        yValueFormatString: "##.######",
+        dataPoints : dps1
+      }]
+    }],
+    navigator: {
+      data: [{
+        dataPoints: dps2
+      }],
+      slider: {
+        minimum: new Date(2015, 08, 14),
+        maximum: new Date(2020, 08, 13)
+      }
+    }
+  });
+  $.getJSON("nse.json", function(data) {
+    for(var i = 0; i < data.length; i++){
+      dps1.push({x: new Date(data[i].Date), y: [Number(data[i].Open), Number(data[i].High), Number(data[i].Low), Number(data[i].Close)]});
+      dps2.push({x: new Date(data[i].Date), y: Number(data[i].Close)});
+    }
+    stockChart.render();
+  });
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+<a href="./al.html">Ashok Leyland</a>
+<a href="./bse.html">BSE</a>
+<a href="./eicher.html">Eicher</a>
+<a href="./cipla.html">Cipla</a>
+<a href="./rel.html">Reliance</a>
+<a href="./tata.html">Tata</a>
+</body>
+</html>

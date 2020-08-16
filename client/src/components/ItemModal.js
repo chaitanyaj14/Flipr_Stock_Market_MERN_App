@@ -11,11 +11,19 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import { addItem } from '../actions/itemActions';
+import PropTypes from 'prop-types';
+
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 class ItemModal extends Component {
+
     state = {
         modal: false,
         name: ''
+    }
+
+    static propTypes = {
+        isAuthenticated: PropTypes.bool
     }
 
     toggle = () => {
@@ -41,37 +49,39 @@ class ItemModal extends Component {
     };
 
     render() {
+        const html = '<div></div>'
         return (
             <div>
-                <Button color="dark"
+                
+                {this.props.isAuthenticated ? <Button color="dark"
                     style={{ marginBottom: '2rem' }}
-                    onClick={this.toggle}>Add Stock</Button>
+                    onClick={this.toggle}>Add Stock</Button> : <h1 className="mb-3 ml-4">Register to create stock list</h1>}
+
 
                 <Modal isOpen={this.state.modal}
                     toggle={this.toggle}>
                     <ModalHeader toggle={this.toggle}>
-                        Add to stock list
-                        <ModalBody>
-                            <Form onSubmit={this.onSubmit}>
-                                <FormGroup>
-                                    <Label for="item">
-                                        Stock
-                                    <Input type="text"
-                                            name="name"
-                                            id="item"
-                                            placeholder="Add stock list"
-                                            onChange={this.onChange}>
-                                        </Input>
-                                    </Label>
-                                    <Button color="dark"
-                                        style={{ marginTop: '2rem' }}
-                                        block>
-                                        Add Stock
+                        Add to stock list </ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={this.onSubmit}>
+                            <FormGroup>
+                                <Label for="item">
+                                    Stock Name</Label>
+                                <Input type="text"
+                                    name="name"
+                                    id="item"
+                                    placeholder="Add stock list"
+                                    onChange={this.onChange}>
+                                </Input>
+
+                                <Button color="dark"
+                                    style={{ marginTop: '2rem' }}
+                                    block>
+                                    Add Stock
                                     </Button>
-                                </FormGroup>
-                            </Form>
-                        </ModalBody>
-                    </ModalHeader>
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
                 </Modal>
             </div>
         );
@@ -79,7 +89,8 @@ class ItemModal extends Component {
 }
 
 const mapStateToProps = state => ({
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps, { addItem })(ItemModal);
